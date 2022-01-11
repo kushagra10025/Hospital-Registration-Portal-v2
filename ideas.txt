@@ -1,0 +1,128 @@
+* Queue Viewer
+* Add Patient
+* Add Visit
+* Edit Patient
+* View Patient Visit History
+* View Data as Charts & Tables
+* Export Data
+
+TODO Refactor Entirity
+TODO Update the Schema SQL File
+
+SETUP:
+	TODO mysql.ini (mysql config file) turn event_scheduler = on ALWAYS
+
+TODO
+
+Add Patient
+1. Take Entry Patient Data -> Done
+1.1 Form Validation - Done
+2. Insert Patient Data and Give a unique Registration Number -> Done
+2.1 Updated - View Reg Number as Alert -> Done
+3. Clear Entry for Next - Done
+4. Polishing
+
+Add Visit
+1. Take Entry Visit Details -> Done
+1.1 Fetch Doctor Name List from Database -> Done
+2. Insert Visit Data with Unique Visit Number -> Done
+2.1 Request to print Form as Print in Modal? -> Done
+3. Print the Registration Slip as PDF -> Done
+4. Polishing
+
+Queue System
+1. Basic Data loading - Done
+1.1 Graphical Data Display - Done
+2. Updating of data - Done
+2.1 Updating of Queue Order based on VISIT Status - Done
+3. TODO Sort / Filter by Doctor Name
+4. Polishing
+
+
+Edit Patient Data
+1. View Data for Selected Patient - Done
+2. Edit Data - Done
+3. Update Data - Done
+4. Polishing
+
+View Visit History
+1. View All Visit History for a Selected Patient - Done
+2. Clear Form - Done
+3. TODO Print Existing Visits
+4. Polishing
+
+Admin Dashboard
+1. Display Data as a Chart
+2. Display Data as a Table
+3. Export Table data as Excel File
+
+
+
+
+TODO Do Stress Test find problems and fix bugs
+
+
+
+
+// doc.save("test.pdf");
+			// NOTE Doesnt Work
+			// let dataSrc = doc.output("datauristring");
+			// console.log(dataSrc);
+			
+			// NOTE This WORKS but doesnt in phone
+			// window.open(URL.createObjectURL(doc.output("blob")))
+			
+			// NOTE Semi Work
+			// let win = window.open("", "myWindow");
+			// win.document.write("<html><head><title>jsPDF</title></head><body><embed src=" + 
+			// 	dataSrc + "></embed></body></html>");
+
+
+
+
+
+
+			// Don't forget, that there are CORS-Restrictions. So if you want to run it without a Server in your Browser you need to transform the image to a dataURL
+// Use http://dataurl.net/#dataurlmaker
+var doc = new jsPDF({
+    orientation:"landscape",
+    unit:"in",
+    format:[5.8, 8.3]
+});
+
+var docWidth = doc.internal.pageSize.getWidth();
+var docHeight = doc.internal.pageSize.getHeight();
+
+doc.setFontSize(10);
+doc.addImage("https://raw.githubusercontent.com/kushagra10025/Hospital-Registration-Portal/main/assets/template/visit_receipt_template.png", "PNG", 0,0,docWidth, docHeight);
+
+doc.text("220106/HHC_V/AEF5", 1.4, 2.1);
+doc.text("220106/HHC/60AB", 5.5, 2.1);
+
+doc.text("ONLINE", 2.15, 2.37);
+doc.text("Dr. Pallavi", 6.22, 2.37);
+
+doc.text("PARTIAL", 1.93, 2.60);
+doc.text("CASH", 3.9, 2.60);
+doc.text("REMARKS GO HERE", 5.47, 2.60);
+
+doc.text("Kushagra Prakash", 1.77, 3.05);
+doc.text("19", 4.15, 3.05);
+doc.text("M", 5.2, 3.05);
+doc.text("01/01/2022", 6.3, 3.05);
+
+doc.text("Hathidah", 1.45, 3.27);
+doc.text("7980716954", 5.4, 3.27);
+
+
+doc.text("Consultation Fees", 0.8, 4);
+doc.text("500", 6.4, 4);
+
+doc.text("Rs. Five Hundred Only /-", 2.25, 4.83);
+
+
+// Order by Visit Status - Not Visited First and then Order by First Come First Serve
+SELECT p.p_fullname, d.doctor_name, q.queue_id,q.reg_no,q.visit_date,q.visit_time, q.visit_status 
+	FROM queue_info AS q, patient_info AS p, doctor_info AS d 
+    WHERE p.reg_no = q.reg_no AND d.doctor_id = q.doctor_id 
+    AND visit_date="2022-01-02" ORDER BY visit_status DESC, visit_time ASC;

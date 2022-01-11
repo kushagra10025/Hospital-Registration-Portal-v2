@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>HHC - Main - Add Patient</title>
+
+	<!-- Bootstrap CSS Includes -->
+	<link rel="stylesheet" href="vendors/bootstrap/css/bootstrap.min.css">
+	<!-- Font Awesome CSS -->
+	<link rel="stylesheet" href="vendors/fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="vendors/jquery-ui/jquery-ui.min.css">
+	<!-- Custom CSS Includes -->
+	<link rel="stylesheet" href="./css/styles.css">
+	<link rel="stylesheet" href="./css/sidebar_styles.css">
+
+</head>
+
+<body>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+		<div class="container-fluid">
+			<!-- Offcanvas Toggler -->
+			<button class="navbar-toggler me-2" type="button" data-bs-toggle="offcanvas"
+				data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<!-- Offcanvas Toggler -->
+
+			<a class="navbar-brand text-uppercase fw-bold" href="#">
+				HHC-Main
+			</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link" aria-current="page" href="./admin-dashboard.html">Admin Dashboard</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" href="./index.html">Main Dashboard</a>
+					</li>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Navbar -->
+
+	<!-- Offcanvas Menu -->
+	<div class="offcanvas offcanvas-start sidebar-nav bg-dark text-white" tabindex="-1" id="offcanvasExample"
+		aria-labelledby="offcanvasExampleLabel">
+
+		<div class="offcanvas-body p-0">
+			<nav class="navbar-dark">
+				<ul class="navbar-nav">
+					<li>
+						<div class="text-muted small fw-bold text-uppercase px-3">
+							ACTIONS
+						</div>
+					</li>
+					<li>
+						<a href="./index.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-calendar-week"></i></span>
+							<span>Queue</span>
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link px-3 active">
+							<span class="me-2"><i class="fas fa-user-plus"></i></span>
+							<span>Add Patient</span>
+						</a>
+					</li>
+					<li>
+						<a href="./add_visit.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-user-check"></i></span>
+							<span>Add Visit</span>
+						</a>
+					</li>
+					<li>
+						<a href="./edit_patient.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-user-edit"></i></span>
+							<span>Edit Patient Data</span>
+						</a>
+					</li>
+					<li>
+						<a href="./view_visits.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-history"></i></span>
+							<span>View Visit History</span>
+						</a>
+					</li>
+					<li>
+						<div class="text-muted small fw-bold text-uppercase px-3">
+							ADMIN
+						</div>
+					</li>
+					<li>
+						<a href="./admin-dashboard.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-user-cog"></i></span>
+							<span>Admin Dashboard</span>
+						</a>
+					</li>
+					<li class="my-3">
+						<hr class="dropdown-divider">
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<!-- Offcanvas Menu -->
+
+	<main class="mt-5 pt-3">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12 fw-bold fs-3">Add Patient</div>
+			</div>
+			<div class="row my-3">
+
+				<div class="mx-auto col-md-6 mb-2">
+					<div class="card">
+						<!-- <div class="card-header"></div> -->
+						<div class="card-body">
+							<form class="g-3" id="frmaddpatient" method="get">
+								<div id="reg_success" class="alert alert-success" role="alert" hidden>
+									Registration Successful. Registration No. -> <span class="fw-bold text-uppercase"
+										id="regid_txt"></span>
+								</div>
+								<div id="reg_fail" class="alert alert-warning" role="alert" hidden>
+									Registration Failed. Please Retry!
+								</div>
+								<div class="errorTxt"></div>
+								<!-- Registration Date -->
+								<div class="input-group mb-3">
+									<span class="input-group-text" id="basic-addon1">Registration Date</span>
+									<input class="form-control" type="date" name="regdate" id="regdate">
+									<label for="regdate" class="invalid-feedback error" style="display:none;">Invalid
+										Message Here!</label>
+								</div>
+
+								<!-- Full Name -->
+								<div class="input-group mb-3">
+									<span class="input-group-text" id="basic-addon1">Full Name</span>
+									<input type="text" class="form-control" name="fullname" id="fullname" placeholder=""
+										aria-label="Fullname" aria-describedby="basic-addon1">
+									<label for="fullname" class="invalid-feedback error" style="display:none;">Invalid
+										Message Here!</label>
+								</div>
+
+								<!-- Gender -->
+								<div class="input-group mb-3">
+									<span class="input-group-text">Gender</span>
+									<div class="input-group-text">
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="radio" name="genderOptions"
+												id="radio_Male" value="male">
+											<label class="form-check-label" for="radio_Male">Male</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="radio" name="genderOptions"
+												id="radio_Female" value="female">
+											<label class="form-check-label" for="radio_Female">Female</label>
+										</div>
+									</div>
+									<!-- Add Label For Custom Error Displaying -->
+									<label for="genderOptions" class="invalid-feedback error"
+										style="display:none;">Invalid Message Here!</label>
+								</div>
+
+								<!-- Phone Number -->
+								<div class="input-group mb-3">
+									<span class="input-group-text" id="basic-addon1">Phone No.</span>
+									<input type="tel" class="form-control" placeholder="" name="phoneno" maxlength="10"
+										aria-label="PhoneNumber" aria-describedby="basic-addon1">
+									<label for="phoneno" class="invalid-feedback error" style="display:none;">Invalid
+										Message Here!</label>
+								</div>
+
+								<!-- Age -->
+								<div class="input-group mb-3">
+									<span class="input-group-text" id="basic-addon1">Age</span>
+									<input type="number" class="form-control" placeholder="" name="age" aria-label="Age"
+										aria-describedby="basic-addon1">
+									<label for="age" class="invalid-feedback error" style="display:none;">Invalid
+										Message Here!</label>
+								</div>
+
+								<!-- Address -->
+								<div class="input-group mb-3">
+									<label class="input-group-text" for="txt_address">Address</label>
+									<input type="text" class="form-control" placeholder="" name="txt_address"
+										id="txt_address" aria-label="Address" aria-describedby="basic-addon1">
+									<label for="txt_address" class="invalid-feedback error"
+										style="display:none;">Invalid Message Here!</label>
+								</div>
+
+								<!-- Register Button -->
+								<div class="btn-group" style="width: 100%;">
+									<button class="btn btn-success" type="submit" id="form_submit">Submit form</button>
+									<button class="btn btn-warning" type="clear" id="form_clear">Clear form</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</main>
+
+	<!-- Bootstrap JS Bundle -->
+	<script src="vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- Bootstrap Autocomplete -->
+	<script src="js/autocomplete.js"></script>
+	<!-- JQuery and Plugins -->
+	<script src="vendors/jquery/jquery-3.6.0.min.js"></script>
+	<script src="vendors/jquery-ui/jquery-ui.min.js"></script>
+	<script src="vendors/jquery-validation/dist/jquery.validate.min.js"></script>
+
+	<!-- Custom JS Files -->
+	<script src="js/utils.js"></script>
+	<script>
+
+		function clearForm() {
+			// Reset the Entire form
+			$('#frmaddpatient')[0].reset();
+			// Hide Alert CSS
+			$('#reg_fail').attr('hidden', true);
+			$('#reg_success').attr('hidden', true);
+
+			// Try to reset Validate Error Messages on Clear Form
+
+			setTimeout(location.reload.bind(location), 1000);
+		}
+
+		function validateForm() {
+			$("#frmaddpatient").validate({
+				// Validate for Unique Username Later on!
+				rules: {
+					regdate: {
+						required: true
+					},
+					fullname: {
+						required: true
+					},
+					genderOptions: {
+						required: true
+					},
+					phoneno: {
+						required: true,
+						minlength: 10,
+						maxlength: 10,
+						number: true
+					},
+					age: {
+						required: true,
+						min: 1,
+						max: 200
+					},
+					txt_address: {
+						required: true
+					}
+				},
+				messages: {
+					regdate: {
+						required: "Registration Date is Required!"
+					},
+					fullname: {
+						required: "Full Name is a required field!"
+					},
+					genderOptions: {
+						required: "Please Choose One Gender!"
+					},
+					phoneno: {
+						required: "Phone No. is Required!",
+						minlength: "Phone No. must be 10 digits long!",
+						maxlength: "Phone No. must be 10 digits long!",
+						number: "Must be a number only!"
+					},
+					age: {
+						required: "Age is Required!",
+						min: "Minimum age must be 1",
+						max: "Are you Immortal?"
+					},
+					txt_address: {
+						required: "Please Enter some Address!"
+					}
+				}
+			});
+
+			if ($("#frmaddpatient").valid()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		function generateRegId(regdate) {
+			var hcIdentifier = "/HHC/";
+			return generateUniqueHospitalID(regdate, hcIdentifier);
+		}
+
+		$(document).ready(function () {
+
+			// clearForm();
+			// Set Defaults
+			document.getElementById("regdate").valueAsDate = new Date();
+
+			// Autocomplete Address Text
+			$.ajax({
+				dataType: "json",
+				url: "locations.json",
+				success: function (data) {
+					addressAutoComplete(data);
+				}
+			});
+
+			$('#form_clear').click(function (e) {
+				e.preventDefault();
+				clearForm();
+			});
+
+			$('#form_submit').click(function (e) {
+				// Prevent Default Submit Behaviour
+				e.preventDefault();
+
+				// Perform Form Validation
+				if (!validateForm()) {
+					return;
+				}
+
+				var gender = '';
+				// Get value from Reg Date
+				var regDate = $('input[name="regdate"]').val();
+				// Generate Unique Reg No from Reg Date
+				var regNo = generateRegId(regDate);
+				// Get Full Name Value
+				var fullname = $('input[name="fullname"]').val();
+				// Get Gender Radio Button Value
+				var genderVal = $('input[name="genderOptions"]:checked').val();
+				if (genderVal === "male") {
+					gender = 'M';
+				} else {
+					gender = 'F';
+				}
+				// Get Phone Number
+				var phoneno = $('input[name="phoneno"]').val();
+				// Get Age
+				var age = $('input[name="age"]').val();
+				// Get Address
+				var address = $('#txt_address').val();
+
+
+				// Run Ajax if Form Validation Successful
+				$.ajax({
+					url: "add_pat.php",
+					type: "POST",
+					data: { regNo: regNo, regDate: regDate, fullname: fullname, gender: gender, phoneno: phoneno, age: age, address: address },
+					success: function (data) {
+						if (data == 1) {
+							// console.log("Inserted Successfully!");
+							$('#reg_success').removeAttr('hidden');
+							$('#reg_fail').attr('hidden', true);
+							$('#regid_txt').text(regNo + "");
+
+							setTimeout(location.reload.bind(location), 5000);
+						}
+						else {
+							$('#reg_fail').removeAttr('hidden');
+							$('#reg_success').attr('hidden', true);
+
+							setTimeout(location.reload.bind(location), 3000);
+						}
+					}
+				});
+
+
+			});
+		});
+	</script>
+
+</body>
+
+</html>

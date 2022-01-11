@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>HHC - Dashboard</title>
+
+	<!-- Bootstrap CSS Includes -->
+	<link rel="stylesheet" href="vendors/bootstrap/css/bootstrap.min.css" />
+	<!-- Font Awesome CSS -->
+	<link rel="stylesheet" href="vendors/fontawesome/css/all.min.css" />
+	<!-- Custom CSS Includes -->
+	<link rel="stylesheet" href="./css/styles.css">
+	<link rel="stylesheet" href="./css/index_styles.css">
+
+</head>
+
+<body>
+
+	<div class="container">
+		<div class="my-3"></div>
+		<div class="row">
+			<div class="col-md-12 col-lg-12 text-center">
+				<img class="logo img-fluid" src="/images/HHC-Logo.png" alt="HHC-Logo">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 col-lg-12 text-center text-uppercase fw-bold">
+				<h1>Dashboard</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-4 text-center">
+				<div>
+					<h3 class="mb-1">
+						<span>Queue</span>
+						<span class="badge rounded-pill bg-warning text-dark" id="queue_date_txt" >DD/MM/YYYY</span>
+						<button type="button" id="syncbtn" class="btn btn-sm"><i class="fas fa-sync"></i></button>
+					</h3>
+					<!-- Loading Spinner -->
+					<!-- NOTE Disabled Currently - Check with User and enable accordingly -->
+					<!-- <div class="spinner-border" id="sync_status" role="status"></div> -->
+					
+					<div class="table-responsive">
+						<table class="table table-borderless table-hover">
+							<thead class="table-primary">
+								<tr>
+									<th colspan="2">Patient</th>
+									<!-- <th>Doctor Name</th> -->
+									<th>Visited?</th>
+								</tr>
+							</thead>
+							<tbody class="tb-body-scrollable" id="queue_table_body">
+								<!-- Queue Elements Go Here! -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card">
+					<div class="card-body">
+						<a href="./add_patient.html">
+							<h5 class="card-title"><i class="fas fa-user-plus"></i> Add Patient</h5>
+						</a>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-body">
+						<a href="./add_visit.html">
+							<h5 class="card-title"><i class="fas fa-user-check"></i> Add Visit</h5>
+						</a>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-body">
+						<a href="./view_visits.html">
+							<h5 class="card-title"><i class="fas fa-history"></i> View Visit History</h5>
+						</a>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-body">
+						<a href="./edit_patient.html">
+							<h5 class="card-title"><i class="fas fa-user-edit"></i> Edit Patient Data</h5>
+						</a>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-body">
+						<a href="./admin-dashboard.html">
+							<h5 class="card-title"><i class="fas fa-user-cog"></i> Admin Dashboard</h5>
+						</a>
+					</div>
+				</div>
+				<div class="my-3"></div>
+			</div>
+		</div>
+
+	</div>
+
+	<!-- Bootstrap JS Bundle -->
+	<script src="vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!-- JQuery & Plugins -->
+	<script src="vendors/jquery/jquery-3.6.0.min.js"></script>
+	
+	<script>
+
+		function handleTable(data){
+			var patientName = data.p_fullname;
+			var doctorName = data.doctor_name;
+			var queueId = data.queue_id;
+			var regNo = data.reg_no;
+			var visitDate = data.visit_date;
+			var visitTime = data.visit_time;
+			var visitStatus = data.visit_status;
+
+			$("#queue_date_txt").text(visitDate);
+			
+			// Add queueID to tr with unique identifier
+			$("#queue_table_body").append($("<tr>" +
+				"<td colspan='2'>" +
+				"<div class='list-group-item rounded'>" +
+				"<div class='d-flex w-100 justify-content-between'>" +
+				"<h5 class='mb-1'>" +
+				"<span>" + patientName + "</span>" +
+				// "<span class='badge rounded-pill bg-secondary'>" + queueId + "</span>" +
+				"</h5>"+
+				"</div>" +
+				"<p class='mb-1'>" +
+				"<span class='badge bg-success'><i class='fas fa-stethoscope'></i> " + doctorName + "</span>" +
+				"</p>" +
+				"<span class='badge bg-primary'><i class='fas fa-user-tag'></i> " + regNo + "</span>" +
+				"</div>"+
+				"</td>" +
+				"<td class='align-middle'>" +
+				"<input class='form-check-input p-3' type='checkbox' name='queuechks[]' id="+queueId+">" +
+				"</td>"+
+				"</tr>"));
+
+			if(visitStatus === "VISITED"){
+				$("#"+queueId+"").attr("checked",true);
+			}else{
+				$("#"+queueId+"").attr("checked",false);
+			}
+		}
+
+		function handleCheckboxInput(){
+			$("input[name='queuechks[]']").change(function(e){
+				var isChecked = $(this).is(":checked");
+				var chkId = $(this).attr("id");
+				
+				$.ajax({
+					url:"queue.php",
+					method:"POST",
+					data:{action:"UPDATEVISIT",queue_id:chkId,status:isChecked},
+					// dataType:"JSON",
+					success:function(data){
+						// NOTE Do Nothing as Of Now
+					}
+				});
+			});
+		}
+
+		function ajax_query(){
+			// console.log("Refreshing Queue");
+			
+			// Refreshing Icon
+			// NOTE Disabled Currently - Check with User and enable accordingly
+			// $("#sync_status").show(250, function(){
+			// 	$("#sync_status").hide(500);
+			// });
+
+			// Call Ajax here
+			$.ajax({
+				url:"queue.php",
+				method:"POST",
+				dataType:"JSON",
+				data:{action:"LOADQUEUE"},
+				success:function(data){
+					if(data == "EMPTY_QUEUE"){
+						$("#queue_table_body").empty();
+						$("#queue_date_txt").text(new Date().toISOString().split('T')[0]);
+						$("#queue_table_body").append("<tr><td colspan=2>No Patients Today!!</td></tr>");
+					}else{
+						$("#queue_table_body").empty();
+						$.each(data, function (index, element) {
+							handleTable(data[index]);
+						});
+
+						handleCheckboxInput();
+					}
+				}
+			});
+		}
+
+		$(document).ready(function(){
+			// Initialize
+			$("#sync_status").hide();
+			ajax_query();
+			setInterval(ajax_query, 10000);
+
+			$("#syncbtn").click(function(e){
+				e.preventDefault();
+				ajax_query();
+			});
+		});
+	</script>
+</body>
+
+</html>

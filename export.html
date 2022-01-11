@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>HHC-United</title>
+
+	<!-- Bootstrap CSS Includes -->
+	<link rel="stylesheet" href="vendors/bootstrap/css/bootstrap.min.css" />
+	<!-- Font Awesome CSS -->
+	<link rel="stylesheet" href="vendors/fontawesome/css/all.min.css" />
+	<!-- Datatables CSS -->
+	<link rel="stylesheet" href="vendors/datatables/jquery.dataTables.min.css" />
+	<link rel="stylesheet" href="vendors/datatables/buttons.dataTables.min.css">
+	<!-- Custom CSS Includes -->
+	<link rel="stylesheet" href="./css/styles.css">
+	<link rel="stylesheet" href="./css/sidebar_styles.css">
+
+</head>
+
+<body>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+		<div class="container-fluid">
+			<!-- Offcanvas Toggler -->
+			<button class="navbar-toggler me-2" type="button" data-bs-toggle="offcanvas"
+				data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<!-- Offcanvas Toggler -->
+
+			<a class="navbar-brand text-uppercase fw-bold" href="#">
+				HHC-Admin
+			</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="#">Admin Dashboard</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="./index.html">Main Dashboard</a>
+					</li>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Navbar -->
+
+	<!-- Offcanvas Menu -->
+	<div class="offcanvas offcanvas-start sidebar-nav bg-dark text-white" tabindex="-1" id="offcanvasExample"
+		aria-labelledby="offcanvasExampleLabel">
+
+		<div class="offcanvas-body p-0">
+			<nav class="navbar-dark">
+				<ul class="navbar-nav">
+					<li>
+						<div class="text-muted small fw-bold text-uppercase px-3">
+							VIEW
+						</div>
+					</li>
+					<li>
+						<a href="admin-dashboard.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-table"></i></span>
+							<span>Realtime Data</span>
+						</a>
+					</li>
+					<li>
+						<div class="text-muted small fw-bold text-uppercase px-3">
+							EXPORT
+						</div>
+					</li>
+					<li>
+						<a href="" class="nav-link px-3 active">
+							<span class="me-2"><i class="fas fa-file-export"></i></span>
+							<span>Export Data</span>
+						</a>
+					</li>
+					<li class="my-3">
+						<hr class="dropdown-divider">
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<!-- Offcanvas Menu -->
+
+	<main class="mt-5 pt-3">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12 fw-bold fs-3">
+					<h3 class="mb-1">
+						<span>Export Data</span>
+					</h3>
+				</div>
+			</div>
+
+			<div class="row my-3">
+				<div class="col-md-12 mb-2 mx-auto">
+					<div class="card">
+						<div class="card-header">
+							<h3>HHC United Data</h3>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-hover" id="hhc_utd_table">
+									<thead>
+										<tr>
+											<th>Reg No.</th>
+											<th>Full Name</th>
+											<th>Gender</th>
+											<th>Phone No.</th>
+											<th>Address</th>
+											<th>Age</th>
+											<th>Reg Date</th>
+											<th>Visit Id</th>
+											<th>Visit Date</th>
+											<th>Doctor Name</th>
+											<th>Doctor Speciality</th>
+											<th>Consultation Fees</th>
+											<th>Consultation Mode</th>
+											<th>Payment Method</th>
+											<th>Payment Status</th>
+											<th>Payment Date</th>
+											<th>Remarks</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!-- Data Goes Here!! -->
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</main>
+
+	<!-- Bootstrap JS Bundle -->
+	<script src="vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+	
+	<!-- JQuery & Plugins -->
+	<script src="vendors/jquery/jquery-3.6.0.min.js"></script>
+	<script src="vendors/jquery-ui/jquery-ui.min.js"></script>
+	<script src="vendors/datatables/jquery.dataTables.min.js"></script>
+	<script src="vendors/datatables/dataTables.buttons.min.js"></script>
+
+	<!-- Datatables Requirements -->
+	<script src="vendors/datatables/jszip.min.js"></script>
+	<script src="vendors/datatables/pdfmake.min.js"></script>
+	<script src="vendors/datatables/vfs_fonts.js"></script>
+	<script src="vendors/datatables/buttons.html5.min.js"></script>
+
+	<script>
+
+		function getFileName() {
+			var d = new Date().toISOString().split('T')[0];
+			return 'HHC_United-' + d;
+		}
+		
+		$(document).ready(function () {
+
+			$.ajax({
+				url: "data_analytics.php",
+				method: "POST",
+				data: { action: "UNITED" },
+				dataType: "JSON",
+				success: function (data) {
+					if (data == "EMPTY_UNITED") {
+						console.log("Table Empty!");
+					} else {
+						$.each(data, function (index, element) {
+							$("#hhc_utd_table").append(
+								$("<tr>" +
+									"<td>" + data[index].reg_no + "</td>" +
+									"<td>" + data[index].p_fullname + "</td>" +
+									"<td>" + data[index].p_gender + "</td>" +
+									"<td>" + data[index].p_pno + "</td>" +
+									"<td>" + data[index].p_address + "</td>" +
+									"<td>" + data[index].p_age + "</td>" +
+									"<td>" + data[index].p_regdate + "</td>" +
+									"<td>" + data[index].visit_id + "</td>" +
+									"<td>" + data[index].date_of_visit + "</td>" +
+									"<td>" + data[index].doctor_name + "</td>" +
+									"<td>" + data[index].doctor_speciality + "</td>" +
+									"<td>" + data[index].consultation_fees + "</td>" +
+									"<td>" + data[index].consultation_mode + "</td>" +
+									"<td>" + data[index].payment_method + "</td>" +
+									"<td>" + data[index].payment_status + "</td>" +
+									"<td>" + data[index].payment_date + "</td>" +
+									"<td>" + data[index].remarks + "</td>" +
+									"</tr>"
+								)
+							);
+						});
+
+						$('#hhc_utd_table').DataTable({
+							dom: 'Bfrtip',
+							buttons: [
+								{
+									extend: 'copyHtml5'
+								},
+								{
+									extend: 'csvHtml5',
+									filename : getFileName()
+								},
+								{
+									extend: 'excelHtml5',
+									autoFilter: true,
+									sheetName: 'HHC United',
+									filename : getFileName()
+								},
+								{
+									extend: 'pdfHtml5',
+									orientation: 'landscape',
+									pageSize: 'LEGAL',
+									filename : getFileName()
+								}
+							]
+						});
+					}
+				}
+			});
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>HHC - Main - View Visit History</title>
+
+	<!-- Bootstrap CSS Includes -->
+	<link rel="stylesheet" href="vendors/bootstrap/css/bootstrap.min.css" />
+	<!-- Font Awesome CSS -->
+	<link rel="stylesheet" href="vendors/fontawesome/css/all.min.css" />
+	<!-- Custom CSS Includes -->
+	<link rel="stylesheet" href="./css/styles.css">
+	<link rel="stylesheet" href="./css/sidebar_styles.css">
+
+	<style>
+		.list-group {
+			max-height: 160px;
+			overflow-y: scroll;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+		<div class="container-fluid">
+			<!-- Offcanvas Toggler -->
+			<button class="navbar-toggler me-2" type="button" data-bs-toggle="offcanvas"
+				data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<!-- Offcanvas Toggler -->
+
+			<a class="navbar-brand text-uppercase fw-bold" href="#">
+				HHC-Main
+			</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link" aria-current="page" href="./admin-dashboard.html">Admin Dashboard</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" href="./index.html">Main Dashboard</a>
+					</li>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Navbar -->
+
+	<!-- Offcanvas Menu -->
+	<div class="offcanvas offcanvas-start sidebar-nav bg-dark text-white" tabindex="-1" id="offcanvasExample"
+		aria-labelledby="offcanvasExampleLabel">
+
+		<div class="offcanvas-body p-0">
+			<nav class="navbar-dark">
+				<ul class="navbar-nav">
+					<li>
+						<div class="text-muted small fw-bold text-uppercase px-3">
+							ACTIONS
+						</div>
+					</li>
+					<li>
+						<a href="./index.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-calendar-week"></i></span>
+							<span>Queue</span>
+						</a>
+					</li>
+					<li>
+						<a href="./add_patient.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-user-plus"></i></span>
+							<span>Add Patient</span>
+						</a>
+					</li>
+					<li>
+						<a href="./add_visit.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-user-check"></i></span>
+							<span>Add Visit</span>
+						</a>
+					</li>
+					<li>
+						<a href="./edit_patient.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-user-edit"></i></span>
+							<span>Edit Patient Data</span>
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link px-3 active">
+							<span class="me-2"><i class="fas fa-history"></i></span>
+							<span>View Visit History</span>
+						</a>
+					</li>
+					<li>
+						<div class="text-muted small fw-bold text-uppercase px-3">
+							ADMIN
+						</div>
+					</li>
+					<li>
+						<a href="./admin-dashboard.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-user-cog"></i></span>
+							<span>Admin Dashboard</span>
+						</a>
+					</li>
+					<li class="my-3">
+						<hr class="dropdown-divider">
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<!-- Offcanvas Menu -->
+
+	<main class="mt-5 pt-3">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12 fw-bold fs-3">View Visit History</div>
+			</div>
+			<div class="row my-3">
+				<div class="col-md-6 mx-auto mb-3">
+					<div class="card">
+						<div class="card-body">
+							<form class="g-3" id="frmviewvisit">
+								<!-- Search Box to Search Patient -->
+								<div class="input-group mb-1">
+									<span class="input-group-text" id="basic-addon1"><i
+											class="fas fa-search"></i></span>
+									<input type="text" class="form-control"
+										placeholder="Search by Phone No., Reg No. or Name" name="patsearch"
+										id="patsearch" aria-label="Search" aria-describedby="basic-addon1">
+
+									<!-- Hidden Input Class Storing the Reg No. -->
+									<input type="hidden" name="selectedRegNo" id="selectedRegNo" value="">
+									<label for="selectedRegNo" class="invalid-feedback error"
+										style="display:none;">Invalid Message Here!</label>
+								</div>
+
+								<!-- Card View to View Selected Patient Details -->
+								<div class="list-group mb-3" id="patlist">
+								</div>
+
+								<!-- Selected Details List -->
+								<div class='list-group-item mb-3 rounded bg-danger text-white' id="selected_details"
+									hidden>
+									<div class='d-flex w-100 justify-content-between'>
+										<h5 class='mb-1'><span id="selFname">Selected Full Name</span>
+											<span class='badge rounded-pill bg-secondary' id="selAddress">Address</span>
+										</h5>
+									</div>
+									<p class='mb-1'><span class='badge rounded-pill bg-info text-dark' id="selPno">Phone
+											No.</span> |
+										<span class='badge rounded-pill bg-primary' id="selRegNo">Registration
+											No.</span>
+									</p>
+								</div>
+
+								<div class="btn-group" style="width: 100%;">
+									<button class="btn btn-success" type="submit" id="form_submit">Submit form</button>
+									<button class="btn btn-warning" type="clear" id="form_clear">Clear form</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Display Data Table Here -->
+			<div class="row my-3">
+				<div class="col-md-12 mx-auto mb-3">
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover">
+							<thead class="table-primary">
+								<tr>
+									<th scope="col">Visit ID</th>
+									<th scope="col">Visit Date</th>
+									<th scope="col">Doctor Name</th>
+									<th scope="col">Fees</th>
+									<th scope="col">Mode</th>
+									<th scope="col">Pay Method</th>
+									<th scope="col">Pay Status</th>
+									<th scope="col">Pay Date</th>
+									<th scope="col">Remarks</th>
+									<th scope="col">Action</th>
+								</tr>
+							</thead>
+							<tbody class="" id="visit_details_table_body">
+								<!-- Visit Details Go Here!! -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<!-- Bootstrap JS Bundle -->
+	<script src="vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- JQuery & Plugins -->
+	<script src="vendors/jquery/jquery-3.6.0.min.js"></script>
+	<script src="vendors/jquery-ui/jquery-ui.min.js"></script>
+	<script src="vendors/jquery-validation/dist/jquery.validate.min.js"></script>
+	<!-- JSPDF Plugin -->
+	<script src="vendors/jsPDF/jspdf.umd.min.js"></script>
+
+	<!-- Custom JS Files -->
+	<script src="js/utils.js"></script>
+
+	<script>
+
+		function handleTable(data) {
+			var visitId = data.visit_id;
+			var visitDate = data.date_of_visit;
+			var docName = data.doctor_name;
+			var consulFees = data.consultation_fees;
+			var consulMode = data.consultation_mode;
+			var payMode = data.payment_method;
+			var payStat = data.payment_status;
+			var payDate = data.payment_date;
+			var remarks = data.remarks;
+
+			$("#visit_details_table_body").append("<tr>" +
+				"<td>" + visitId + "</td>" +
+				"<td>" + visitDate + "</td>" +
+				"<td>" + docName + "</td>" +
+				"<td>" + consulFees + "</td>" +
+				"<td>" + consulMode + "</td>" +
+				"<td>" + payMode + "</td>" +
+				"<td>" + payStat + "</td>" +
+				"<td>" + payDate + "</td>" +
+				"<td>" + remarks + "</td>" +
+				"<td>" +
+				"<button type='button' class='btn btn-outline-primary btn-sm' disabled>Print</button>" +
+				"</td>" +
+				"</tr>");
+		}
+
+		function validateForm() {
+			$("#frmviewvisit").validate({
+				ignore: [],
+				rules: {
+					selectedRegNo: {
+						required: true,
+						checkvalue: ''
+					}
+				},
+				messages: {
+					selectedRegNo: {
+						required: "Select a Patient!"
+					}
+				}
+			});
+			// For the time being
+			if ($("#frmviewvisit").valid()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		$(document).ready(function () {
+
+			// TODO Refactor 001 - Same as Add Visit Patient Search
+			$("#patsearch").keyup(function () {
+				var searchText = $(this).val();
+				// console.log(searchText);
+				if (searchText != '') {
+					$.ajax({
+						url: "add_vis.php",
+						method: "POST",
+						data: { action: "SEARCH", searchText: searchText },
+						success: function (data) {
+							// Populate Pat List with Data from PHP
+							$("#patlist").html(data);
+
+							// Get Selected Pat Details
+							$(".patdetails").click(function (e) {
+								e.preventDefault();
+								$(this).addClass('active');
+								$(this).attr('aria-current', 'pattoselect');
+
+								var selFName = $('a[aria-current="pattoselect"]').find('#patfname').text();
+								var selAddress = $('a[aria-current="pattoselect"]').find('#pataddress').text();
+								var selPhone = $('a[aria-current="pattoselect"]').find('#patpno').text();
+								var selRegNo = $('a[aria-current="pattoselect"]').find('#patregno').text();
+
+
+								// Unhide Selected Display Details & Display
+								var selectedDetailsDisplay = $("#selected_details");
+								selectedDetailsDisplay.find("#selFname").text(selFName);
+								selectedDetailsDisplay.find("#selAddress").text(selAddress);
+								selectedDetailsDisplay.find("#selPno").text(selPhone);
+								selectedDetailsDisplay.find("#selRegNo").text(selRegNo);
+								selectedDetailsDisplay.removeAttr("hidden");
+
+								// Set Hidden Input to Pass 
+								$("#selectedRegNo").val(selRegNo);
+
+								// Clear List Group
+								$("#patlist").html('');
+								$("#patsearch").val('');
+							});
+
+						}
+					});
+				} else {
+					$("#patlist").html('');
+				}
+			});
+
+			$("#form_submit").click(function (e) {
+				e.preventDefault();
+
+				if (!validateForm()) {
+					return;
+				}
+
+				var selectedRegNoInput = $('input[name="selectedRegNo"]').val();
+
+				$.ajax({
+					url: "add_vis.php",
+					method: "POST",
+					data: { action: "VISITDETAILS", reg_no: selectedRegNoInput },
+					dataType: "JSON",
+					success: function (data) {
+						$("#visit_details_table_body").empty();
+						if (data == "EMPTY_VISIT_DETAILS") {
+							$("#visit_details_table_body").append(
+								"<tr class='fw-bold table-warning'><td colspan=10>No Visits Found!</td></tr>"
+							);
+						} else {
+
+							$.each(data, function (index, element) {
+								handleTable(data[index]);
+							});
+
+							// TODO Print Button
+						}
+					}
+				});
+			});
+
+			$("#form_clear").click(function (e) {
+				e.preventDefault();
+				// TODO Clear Form
+				console.log("Form Cleared!");
+				setTimeout(location.reload.bind(location), 1000);
+			});
+		});
+	</script>
+
+</body>
+
+</html>

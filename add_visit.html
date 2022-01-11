@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>HHC - Main - Add Visit</title>
+
+	<!-- Bootstrap CSS Includes -->
+	<link rel="stylesheet" href="vendors/bootstrap/css/bootstrap.min.css" />
+	<!-- Font Awesome CSS -->
+	<link rel="stylesheet" href="vendors/fontawesome/css/all.min.css"/>
+	<!-- Custom CSS Includes -->
+	<link rel="stylesheet" href="./css/styles.css">
+	<link rel="stylesheet" href="./css/sidebar_styles.css">
+
+	<style>
+		.list-group {
+			max-height: 160px;
+			overflow-y: scroll;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+		<div class="container-fluid">
+			<!-- Offcanvas Toggler -->
+			<button class="navbar-toggler me-2" type="button" data-bs-toggle="offcanvas"
+				data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<!-- Offcanvas Toggler -->
+
+			<a class="navbar-brand text-uppercase fw-bold" href="#">
+				HHC-Main
+			</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link" aria-current="page" href="./admin-dashboard.html">Admin Dashboard</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" href="./index.html">Main Dashboard</a>
+					</li>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Navbar -->
+
+	<!-- Offcanvas Menu -->
+	<div class="offcanvas offcanvas-start sidebar-nav bg-dark text-white" tabindex="-1" id="offcanvasExample"
+		aria-labelledby="offcanvasExampleLabel">
+
+		<div class="offcanvas-body p-0">
+			<nav class="navbar-dark">
+				<ul class="navbar-nav">
+					<li>
+						<div class="text-muted small fw-bold text-uppercase px-3">
+							ACTIONS
+						</div>
+					</li>
+					<li>
+						<a href="./index.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-calendar-week"></i></span>
+							<span>Queue</span>
+						</a>
+					</li>
+					<li>
+						<a href="./add_patient.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-user-plus"></i></span>
+							<span>Add Patient</span>
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link px-3 active">
+							<span class="me-2"><i class="fas fa-user-check"></i></span>
+							<span>Add Visit</span>
+						</a>
+					</li>
+					<li>
+						<a href="./edit_patient.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-user-edit"></i></span>
+							<span>Edit Patient Data</span>
+						</a>
+					</li>
+					<li>
+						<a href="./view_visits.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-history"></i></span>
+							<span>View Visit History</span>
+						</a>
+					</li>
+					<li>
+						<div class="text-muted small fw-bold text-uppercase px-3">
+							ADMIN
+						</div>
+					</li>
+					<li>
+						<a href="./admin-dashboard.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-user-cog"></i></span>
+							<span>Admin Dashboard</span>
+						</a>
+					</li>
+					<li class="my-3">
+						<hr class="dropdown-divider">
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<!-- Offcanvas Menu -->
+
+	<main class="mt-5 pt-3">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12 fw-bold fs-3">Add Visit</div>
+			</div>
+			<div class="row my-3">
+
+				<div class="mx-auto col-md-6 mb-2">
+					<div class="card">
+						<!-- <div class="card-header"></div> -->
+						<div class="card-body">
+							<form class="g-3" id="frmaddvisit" method="get">
+								<div id="visit_success" class="alert alert-success" role="alert" hidden>
+									Visit Added Successfully!
+								</div>
+								<div id="visit_fail" class="alert alert-warning" role="alert" hidden>
+									Failed to Add Visit!. Please Retry!
+								</div>
+
+								<!-- Search Box to Search Patient -->
+								<div class="input-group mb-1">
+									<span class="input-group-text" id="basic-addon1"><i
+											class="fas fa-search"></i></span>
+									<input type="text" class="form-control"
+										placeholder="Search by Phone No., Reg No. or Name" name="patsearch"
+										id="patsearch" aria-label="Search" aria-describedby="basic-addon1">
+									<!-- Hidden Input Class Storing the Reg No. -->
+									<input type="hidden" name="selectedRegNo" id="selectedRegNo" value="">
+									<label for="selectedRegNo" class="invalid-feedback error"
+										style="display:none;">Invalid Message Here!</label>
+								</div>
+								<!-- Card View to View Selected Patient Details -->
+								<div class="list-group mb-3" id="patlist">
+									<!-- List of Patient Goes Here!! -->
+								</div>
+
+								<!-- Selected Details List -->
+								<div class='list-group-item mb-3 rounded bg-danger text-white' id="selected_details"
+									hidden>
+									<div class='d-flex w-100 justify-content-between'>
+										<h5 class='mb-1'><span id="selFname">Selected Full Name</span>
+											<span class='badge rounded-pill bg-secondary' id="selAddress">Address</span>
+										</h5>
+									</div>
+									<p class='mb-1'><span class='badge rounded-pill bg-info text-dark' id="selPno">Phone
+											No.</span> |
+										<span class='badge rounded-pill bg-primary' id="selRegNo">Registration
+											No.</span>
+									</p>
+								</div>
+
+
+								<!-- Visit Date -->
+								<div class="input-group mb-3">
+									<span class="input-group-text" id="basic-addon1">Visit Date</span>
+									<input class="form-control" type="date" name="visitdate" id="visitdate">
+									<label for="visitdate" class="invalid-feedback error" style="display:none;">Invalid
+										Message Here!</label>
+								</div>
+
+								<!-- Doctor Name -->
+								<div class="input-group mb-3">
+									<label class="input-group-text" for="chk_doctor">Doctor</label>
+									<select class="form-select" name="chk_doctor" id="chk_doctor">
+										<option value="" selected>Choose...</option>
+										<option value="1">Dr. ABC XYZ</option>
+										<option value="2">Dr. PQR STU</option>
+										<option value="3">Dr. XYZ KLM</option>
+									</select>
+									<label for="chk_doctor" class="invalid-feedback error" style="display:none;">Invalid
+										Message Here!</label>
+								</div>
+
+								<!-- Consultation Mode -->
+								<div class="input-group mb-3">
+									<label class="input-group-text" for="chk_cmode">Consultation Mode</label>
+									<select class="form-select" name="chk_cmode" id="chk_cmode">
+										<option value="">Choose...</option>
+										<option value="OFFLINE" selected>Offline</option>
+										<option value="ONLINE">Online</option>
+										<option value="LAB_WORK">Lab Work</option>
+									</select>
+									<label for="chk_cmode" class="invalid-feedback error" style="display:none;">Invalid
+										Message Here!</label>
+								</div>
+
+								<!-- Consultation Fees -->
+								<div class="input-group mb-3">
+									<span class="input-group-text" id="basic-addon1">Consultation Fees</span>
+									<input type="tel" class="form-control" placeholder="" name="cfees" id="cfees"
+										maxlength="10" aria-label="ConsultationFees" value="0" aria-describedby="basic-addon1"
+										required>
+									<label for="cfees" class="invalid-feedback error" style="display:none;">Invalid
+										Message Here!</label>
+								</div>
+
+								<!-- Payment Method -->
+								<div class="input-group mb-3">
+									<label class="input-group-text" for="chk_pmode">Payment Method</label>
+									<select class="form-select" name="chk_pmode" id="chk_pmode">
+										<option value="">Choose...</option>
+										<option value="CASH" selected>Cash</option>
+										<option value="UPI">UPI - GPay, PayTM, PhonePe, others</option>
+										<option value="CARD">Card - Visa, MasterCard, Rupay</option>
+									</select>
+									<label for="chk_pmode" class="invalid-feedback error" style="display:none;">Invalid
+										Message Here!</label>
+								</div>
+
+								<!-- Payment Status  -->
+								<div class="input-group mb-3">
+									<label class="input-group-text" for="chk_pstatus">Payment Status</label>
+									<select class="form-select" name="chk_pstatus" id="chk_pstatus">
+										<option value="">Choose...</option>
+										<option value="FULL" selected>Full</option>
+										<option value="PARTIAL">Partial</option>
+										<option value="NONE">None</option>
+									</select>
+									<label for="chk_pstatus" class="invalid-feedback error"
+										style="display:none;">Invalid Message Here!</label>
+								</div>
+
+								<!-- Payment Date -->
+								<div class="input-group mb-3">
+									<span class="input-group-text" id="basic-addon1">Payment Date</span>
+									<input class="form-control" type="date" name="paydate" id="paydate">
+									<label for="paydate" class="invalid-feedback error" style="display:none;">Invalid
+										Message Here!</label>
+								</div>
+
+								<!-- Remarks -->
+								<div class="input-group mb-3">
+									<span class="input-group-text">Remarks</span>
+									<textarea class="form-control" aria-label="With textarea" name="txtRem"
+										id="txtRem">NONE</textarea>
+									<label for="txtRem" class="invalid-feedback error" style="display:none;">Invalid
+										Message Here!</label>
+								</div>
+
+								<!-- Buttons -->
+								<div class="btn-group" style="width: 100%;">
+									<button class="btn btn-success" type="submit" id="form_submit">Submit form</button>
+									<button class="btn btn-warning" type="clear" id="form_clear">Clear form</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<!-- Print Modal -->
+				<div class="modal fade" id="printModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+					aria-labelledby="staticBackdropLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="staticBackdropLabel">Print Visit Receipt ?</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								Do you want to print the visit Receipt ?
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" id="printReceiptNoBtn" data-bs-dismiss="modal">No</button>
+								<button type="button" class="btn btn-primary" id="printReceiptBtn">Yes</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<!-- Bootstrap JS Bundle -->
+	<script src="vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- JQuery and Plugins -->
+	<script src="vendors/jquery/jquery-3.6.0.min.js"></script>
+	<script src="vendors/jquery-ui/jquery-ui.min.js"></script>
+	<script src="vendors/jquery-validation/dist/jquery.validate.min.js"></script>
+	<!-- JSPDF Plugin -->
+	<script src="vendors/jsPDF/jspdf.umd.min.js"></script>
+
+	<!-- Custom JS Files -->
+	<script src="js/utils.js"></script>
+
+	<script>
+
+		function createPDF(visitid) {
+			// Get Visit and Patient Details via Ajax from VisitId and RegNo.
+			$.ajax({
+				url: "add_vis.php",
+				method: "POST",
+				dataType: "JSON",
+				data: { action: "DETAILS", visitid: visitid },
+				success: function (data) {
+					processPDF(data);
+				}
+			});
+		}
+
+		function clearForm() {
+			// TODO Clear Form Here
+			console.log("Form is Cleared!");
+			setTimeout(location.reload.bind(location), 1000);
+		}
+
+		function generateVisitId(visitdate) {
+			var hcIdentifier = "/HHC_V/";
+			return generateUniqueHospitalID(visitdate, hcIdentifier);
+		}
+
+		function validateForm() {
+			$("#frmaddvisit").validate({
+				ignore: [],
+				rules: {
+					visitdate: {
+						required: true
+					},
+					chk_doctor: {
+						required: true
+					},
+					chk_cmode: {
+						required: true
+					},
+					cfees: {
+						required: true,
+						number: true
+					},
+					chk_pmode: {
+						required: true
+					},
+					chk_pstatus: {
+						required: true
+					},
+					paydate: {
+						required: true
+					},
+					txtRem: {
+						required: true
+					},
+					selectedRegNo: {
+						required: true,
+						checkvalue: ''
+					}
+				},
+				messages: {
+					visitdate: {
+						required: "Visit Date is Required!"
+					},
+					chk_doctor: {
+						required: "Please select a Doctor!"
+					},
+					chk_cmode: {
+						required: "Please select a Consultation Mode!"
+					},
+					cfees: {
+						required: "Please enter the Consultation Feed!"
+					},
+					chk_pmode: {
+						required: "Please select the Mode of Payment!"
+					},
+					chk_pstatus: {
+						required: "Please select the Payment Status!"
+					},
+					paydate: {
+						required: "Please select the Payment Date!"
+					},
+					txtRem: {
+						required: "Please enter None if no remarks!"
+					},
+					selectedRegNo: {
+						required: "Select a Patient",
+					}
+				}
+			});
+
+			if ($("#frmaddvisit").valid()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		function updateDoctorDropDown(){
+			$("#chk_doctor").empty();
+			$.ajax({
+				url: "add_vis.php",
+				method: "POST",
+				data: { action: "DOCDETAILS" },
+				dataType: "JSON",
+				success: function (data) {
+					$("#chk_doctor").append($('<option selected></option>').val('').html("Choose..."));
+					$.each(data, function (index, element) {
+
+						$("#chk_doctor").append(
+							$('<option></option>').val(data[index].doctor_id).html(data[index].doctor_name)
+						);
+					});
+
+				}
+			});
+		}
+
+		$(document).ready(function () {
+
+			// Set Defaults
+			document.getElementById("visitdate").valueAsDate = new Date();
+			document.getElementById("paydate").valueAsDate = new Date();
+
+			updateDoctorDropDown();
+
+			// TODO Refactor 001 - Used in View Visit History
+			$("#patsearch").keyup(function () {
+				var searchText = $(this).val();
+				// console.log(searchText);
+				if (searchText != '') {
+					$.ajax({
+						url: "add_vis.php",
+						method: "POST",
+						data: { action: "SEARCH", searchText: searchText },
+						success: function (data) {
+							// Populate Pat List with Data from PHP
+							$("#patlist").html(data);
+
+							// Get Selected Pat Details
+							$(".patdetails").click(function (e) {
+								e.preventDefault();
+								$(this).addClass('active');
+								$(this).attr('aria-current', 'pattoselect');
+
+								var selFName = $('a[aria-current="pattoselect"]').find('#patfname').text();
+								var selAddress = $('a[aria-current="pattoselect"]').find('#pataddress').text();
+								var selPhone = $('a[aria-current="pattoselect"]').find('#patpno').text();
+								var selRegNo = $('a[aria-current="pattoselect"]').find('#patregno').text();
+
+
+								// Unhide Selected Display Details & Display
+								var selectedDetailsDisplay = $("#selected_details");
+								selectedDetailsDisplay.find("#selFname").text(selFName);
+								selectedDetailsDisplay.find("#selAddress").text(selAddress);
+								selectedDetailsDisplay.find("#selPno").text(selPhone);
+								selectedDetailsDisplay.find("#selRegNo").text(selRegNo);
+								selectedDetailsDisplay.removeAttr("hidden");
+
+								// Set Hidden Input to Pass 
+								$("#selectedRegNo").val(selRegNo);
+
+								// Clear List Group
+								$("#patlist").html('');
+								$("#patsearch").val('');
+							});
+
+						}
+					});
+				} else {
+					$("#patlist").html('');
+				}
+			});
+
+			$("#form_submit").click(function (e) {
+				e.preventDefault();
+				console.log("Submit Button Clicked!");
+
+				if (!validateForm()) {
+					return;
+				}
+
+				var visitdate = $('input[name="visitdate"]').val();
+				var visitid = generateVisitId(visitdate);
+				var docname = $("#chk_doctor").val();
+				var consulmode = $("#chk_cmode").val();
+				var consulfees = $('input[name="cfees"]').val();
+				var paymode = $("#chk_pmode").val();
+				var paystatus = $("#chk_pstatus").val();
+				var paydate = $('input[name="paydate"]').val();
+				var remtext = $("#txtRem").val();
+				var selectedRegNoInput = $('input[name="selectedRegNo"]').val();
+
+				// Run Ajax if form validation is successful
+				$.ajax({
+					url: "add_vis.php",
+					type: "POST",
+					data: { action: "INSERT", visitdate: visitdate, visitid: visitid, docname: docname, consulmode: consulmode, consulfees: consulfees, paymode: paymode, paystatus: paystatus, paydate: paydate, remtext: remtext, regno: selectedRegNoInput },
+					success: function (data) {
+						if (data == 1) {
+							$('#visit_success').removeAttr('hidden');
+							$('#visit_fail').attr('hidden', true);
+
+							// Show Print Modal
+							$("#printModal").modal("show");
+							// If Yes in Modal Print PDF
+							$("#printReceiptBtn").click(function (ev) {
+								ev.preventDefault();
+
+								console.log("Printing PDF!");
+
+								createPDF(visitid);
+
+								// Close & Clear Form 
+								$("#printModal").modal("hide");
+								clearForm();
+							});
+							// If No Close and Clear Form - Default
+							$("#printReceiptNoBtn").click(function(ev){
+								clearForm();
+							});
+						}
+						else {
+							$('#visit_fail').removeAttr('hidden');
+							$('#visit_success').attr('hidden', true);
+
+							// Hide Print Modal
+							$("#printModal").modal("hide");
+						}
+
+					}, error: function (jqxhr, status, exception) {
+						console.log('Exception:', exception);
+					}
+				});
+
+			});
+
+			$("#form_clear").click(function (e) {
+				e.preventDefault();
+				console.log("Clear Button Clicked!");
+				clearForm();
+			});
+		});
+	</script>
+</body>
+
+</html>

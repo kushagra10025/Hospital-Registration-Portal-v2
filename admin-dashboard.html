@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>HHC - Admin Dashboard</title>
+
+	<!-- Bootstrap CSS Includes -->
+	<link rel="stylesheet" href="vendors/bootstrap/css/bootstrap.min.css">
+	<!-- Font Awesome CSS -->
+	<link rel="stylesheet" href="vendors/fontawesome/css/all.min.css">
+	<!-- Custom CSS Includes -->
+	<link rel="stylesheet" href="./css/styles.css">
+	<link rel="stylesheet" href="./css/sidebar_styles.css">
+
+	<style>
+		/* canvas{
+			width:600px !important;
+			height:600px !important;
+		} */
+	</style>
+</head>
+
+<body>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+		<div class="container-fluid">
+			<!-- Offcanvas Toggler -->
+			<button class="navbar-toggler me-2" type="button" data-bs-toggle="offcanvas"
+				data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<!-- Offcanvas Toggler -->
+
+			<a class="navbar-brand text-uppercase fw-bold" href="#">
+				HHC-Admin
+			</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="#">Admin Dashboard</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="./index.html">Main Dashboard</a>
+					</li>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Navbar -->
+
+	<!-- Offcanvas Menu -->
+	<div class="offcanvas offcanvas-start sidebar-nav bg-dark text-white" tabindex="-1" id="offcanvasExample"
+		aria-labelledby="offcanvasExampleLabel">
+
+		<div class="offcanvas-body p-0">
+			<nav class="navbar-dark">
+				<ul class="navbar-nav">
+					<li>
+						<div class="text-muted small fw-bold text-uppercase px-3">
+							VIEW
+						</div>
+					</li>
+					<li>
+						<a href="" class="nav-link px-3 active">
+							<span class="me-2"><i class="fas fa-table"></i></span>
+							<span>Realtime Data</span>
+						</a>
+					</li>
+					<li>
+						<div class="text-muted small fw-bold text-uppercase px-3">
+							EXPORT
+						</div>
+					</li>
+					<li>
+						<a href="export.html" class="nav-link px-3">
+							<span class="me-2"><i class="fas fa-file-export"></i></span>
+							<span>Export Data</span>
+						</a>
+					</li>
+					<li class="my-3">
+						<hr class="dropdown-divider">
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<!-- Offcanvas Menu -->
+
+	<main class="mt-5 pt-3">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12 fw-bold fs-3">
+					<h3 class="mb-1">
+						<span>Dashboard</span>
+						<button type="button" id="syncbtn" class="btn btn-sm"><i class="fas fa-sync"></i></button>
+					</h3>
+				</div>
+			</div>
+
+			<!-- Visits Data -->
+			<div class="row my-3">
+				<div class="col-md-12 mx-auto mb-2">
+					<div class="card">
+						<div class="card-header">
+							<h5>
+								Visits
+								<button class="btn btn-sm btn-outline-danger" type="button" data-bs-toggle="collapse"
+									data-bs-target="#visits_card_body" aria-expanded="true">Show / Hide</button>
+							</h5>
+						</div>
+						<!-- Add Show class here -->
+						<div class="card-body collapse show" id="visits_card_body">
+							<div class="row">
+								<div class="col-md-5">
+									<div class="table-responsive">
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th>Doctor Name</th>
+													<th>Patient Count</th>
+												</tr>
+											</thead>
+											<tbody id="stats_visits">
+												<!-- Data Goes Here!! -->
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="col-md-7">
+									<canvas id="stats_visits_graph"></canvas>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Places Data -->
+			<div class="row my-3">
+				<div class="col-md-12 mx-auto mb-2">
+					<div class="card">
+						<div class="card-header">
+							<h5>
+								Places
+								<button class="btn btn-sm btn-outline-danger" type="button" data-bs-toggle="collapse"
+									data-bs-target="#places_card_body" aria-expanded="true">Show / Hide</button>
+							</h5>
+						</div>
+						<div class="card-body collapse show" id="places_card_body">
+							<div class="row">
+								<div class="col-md-5">
+									<div class="table-responsive">
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th>Place Name</th>
+													<th>Patient Count</th>
+												</tr>
+											</thead>
+											<tbody id="stats_places">
+												<!-- Data Goes Here!! -->
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="col-md-7">
+									<canvas id="stats_places_graph"></canvas>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Speciality Data -->
+			<div class="row my-3">
+				<div class="col-md-12 mx-auto mb-2">
+					<div class="card">
+						<div class="card-header">
+							<h5>
+								Speciality
+								<button class="btn btn-sm btn-outline-danger" type="button" data-bs-toggle="collapse"
+									data-bs-target="#speciality_card_body" aria-expanded="true">Show / Hide</button>
+							</h5>
+						</div>
+						<div class="card-body collapse show" id="speciality_card_body">
+							<div class="row">
+								<div class="col-md-5">
+									<div class="table-responsive">
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th>Speciality</th>
+													<th>Patient Count</th>
+												</tr>
+											</thead>
+											<tbody id="stats_speciality">
+												<!-- Data Goes Here!! -->
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="col-md-7">
+									<canvas id="stats_speciality_graph"></canvas>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Speciality Mode Data -->
+			<div class="row my-3">
+				<div class="col-md-12 mx-auto mb-2">
+					<div class="card">
+						<div class="card-header">
+							<h5>
+								Speciality Mode
+								<button class="btn btn-sm btn-outline-danger" type="button" data-bs-toggle="collapse"
+									data-bs-target="#specialitymode_card_body" aria-expanded="true">Show / Hide</button>
+							</h5>
+						</div>
+						<div class="card-body collapse show" id="specialitymode_card_body">
+							<div class="row">
+								<div class="col-md-5">
+									<div class="table-responsive">
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th>Speciality</th>
+													<th>Offline</th>
+													<th>Online</th>
+												</tr>
+											</thead>
+											<tbody id="stats_specialitymode">
+												<!-- Data Goes Here!! -->
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="col-md-7">
+									<canvas id="stats_specialitymode_graph"></canvas>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<!-- Bootstrap JS Bundle -->
+	<script src="vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!-- JQuery & Plugins -->
+	<script src="vendors/jquery/jquery-3.6.0.min.js"></script>
+	<script src="vendors/jquery-ui/jquery-ui.min.js"></script>
+
+	<!-- Chart JS -->
+	<script src="vendors/chartjs/dist/chart.min.js"></script>
+	<script src="vendors/chatjs-plugins/chartjs-plugin-datalabels.min.js"></script>
+	
+	<script>
+		function getRandomColor() {
+			var letters = '0123456789ABCDEF';
+			var color = '#';
+			for (var i = 0; i < 6; i++) {
+				color += letters[Math.floor(Math.random() * 16)];
+			}
+			return color;
+		}
+
+		function poolColors(a) {
+			var pool = [];
+			for (i = 0; i < a; i++) {
+				pool.push(getRandomColor());
+			}
+			return pool;
+		}
+
+		function reviseJSON(data) {
+			var revisedJSON = [];
+
+			var specalitySet = new Set();
+			$.each(data, function (index, element) {
+				specalitySet.add(data[index].doctor_speciality);
+			});
+
+			specalitySet.forEach(function (value) {
+				var entry = {};
+
+				var onlineCount = 0;
+				var offlineCount = 0;
+
+				$.each(data, function (index, element) {
+					if (data[index].doctor_speciality == value) {
+						if (data[index].consultation_mode == "ONLINE") {
+							onlineCount = data[index].count;
+						} else {
+							offlineCount = data[index].count;
+						}
+
+					}
+				});
+
+				entry = { "doctor_speciality": value, "online": onlineCount, "offline": offlineCount };
+
+				revisedJSON.push(entry);
+			});
+
+			return revisedJSON;
+		}
+
+		function loadData() {
+			// Visit Data
+			$.ajax({
+				url: "data_analytics.php",
+				method: "POST",
+				data: { action: "VISITS" },
+				dataType: "JSON",
+				success: function (data) {
+					// Data For Chart
+					var doc_name = [];
+					var pat_count_visits = [];
+
+					if (data == "EMPTY_VISITS") {
+						$("#stats_visits").append(
+							$("<tr><td colspan=2>No Data Found!</td></tr>")
+						);
+					} else {
+						// Append Data In Table
+						$.each(data, function (index, element) {
+
+							// Push Values to Array
+							doc_name.push(data[index].doctor_name);
+							pat_count_visits.push(data[index].count);
+
+							$("#stats_visits").append(
+								$("<tr>" +
+									"<td>" +
+									data[index].doctor_name +
+									"</td>" +
+									"<td>" +
+									data[index].count +
+									"</td>" +
+									"</tr>"
+								)
+							);
+						});
+
+						// Send Data to Chart.js
+						var chartData = {
+							labels: doc_name,
+							datasets: [{
+								label: "Patient Count",
+								data: pat_count_visits,
+								backgroundColor: poolColors(pat_count_visits.length),
+								borderWidth: 3,
+								borderColor: "#000",
+								hoverOffset: 5
+							}
+							]
+						}
+
+						var groupChart = $("#stats_visits_graph");
+						var graph1 = new Chart(groupChart, {
+							type: 'pie',
+							data: chartData,
+							plugins: [ChartDataLabels],
+							options: {
+								responsive: true,
+								// maintainAspectRatio: true,
+								plugins: {
+									datalabels: {
+										color: 'white',
+									}
+								},
+							}
+						});
+					}
+				}
+			});
+
+			// Places Data
+			$.ajax({
+				url: "data_analytics.php",
+				method: "POST",
+				data: { action: "PLACES" },
+				dataType: "JSON",
+				success: function (data) {
+					// Data for Chart
+					var place_name = [];
+					var pat_count_places = [];
+
+					if (data == "EMPTY_PLACES") {
+						$("#stats_places").append(
+							$("<tr><td colspan=2>No Data Found!</td></tr>")
+						);
+					} else {
+						// Append Data In Table
+						$.each(data, function (index, element) {
+							// Push Values to Array
+							place_name.push(data[index].p_address);
+							pat_count_places.push(data[index].count);
+
+							$("#stats_places").append(
+								$("<tr>" +
+									"<td>" +
+									data[index].p_address +
+									"</td>" +
+									"<td>" +
+									data[index].count +
+									"</td>" +
+									"</tr>"
+								)
+							);
+						});
+
+						// Send Data to Chart.js
+						var chartData = {
+							labels: place_name,
+							datasets: [{
+								label: "Patient Count",
+								data: pat_count_places,
+								backgroundColor: poolColors(pat_count_places.length),
+								borderWidth: 3,
+								borderColor: "#000",
+								hoverOffset: 5
+							}
+							]
+						}
+
+						var groupChart = $("#stats_places_graph");
+						var graph2 = new Chart(groupChart, {
+							type: 'pie',
+							data: chartData,
+							plugins: [ChartDataLabels],
+							options: {
+								responsive: true,
+								// maintainAspectRatio: true,
+								plugins: {
+									datalabels: {
+										color: 'white',
+									}
+								},
+							}
+						});
+					}
+				}
+			});
+
+			// Speciality Data
+			$.ajax({
+				url: "data_analytics.php",
+				method: "POST",
+				data: { action: "SPECIALITY" },
+				dataType: "JSON",
+				success: function (data) {
+					// Data for Chart
+					var specality = [];
+					var pat_count_speciality = [];
+
+					if (data == "EMPTY_SPECIALITY") {
+						$("#stats_speciality").append(
+							$("<tr><td colspan=2>No Data Found!</td></tr>")
+						);
+					} else {
+						// Append Data In Table
+						$.each(data, function (index, element) {
+							// Push Values to Array
+							specality.push(data[index].doctor_speciality);
+							pat_count_speciality.push(data[index].count);
+
+							$("#stats_speciality").append(
+								$("<tr>" +
+									"<td>" +
+									data[index].doctor_speciality +
+									"</td>" +
+									"<td>" +
+									data[index].count +
+									"</td>" +
+									"</tr>"
+								)
+							);
+						});
+
+						// Send Data to Chart.js
+						var chartData = {
+							labels: specality,
+							datasets: [{
+								label: "Patient Count",
+								data: pat_count_speciality,
+								backgroundColor: poolColors(pat_count_speciality.length),
+								borderWidth: 3,
+								borderColor: "#000",
+								hoverOffset: 5
+							}
+							]
+						}
+
+						var groupChart = $("#stats_speciality_graph");
+						var graph3 = new Chart(groupChart, {
+							type: 'bar',
+							data: chartData,
+							plugins: [ChartDataLabels],
+							options: {
+								responsive: true,
+								// maintainAspectRatio: true,
+								plugins: {
+									datalabels: {
+										color: 'white',
+									}
+								},
+							}
+						});
+					}
+				}
+			});
+
+			// Speciality Mode Data
+			$.ajax({
+				url: "data_analytics.php",
+				method: "POST",
+				data: { action: "SPECIALITYMODE" },
+				dataType: "JSON",
+				success: function (data) {
+					// Data for Chart
+					var specalitymode = [];
+					var pat_count_specialitymode_online = [];
+					var pat_count_specialitymode_offline = [];
+
+					if (data == "EMPTY_SPECIALITYMODE") {
+						$("#stats_specialitymode").append(
+							$("<tr><td colspan=3>No Data Found!</td></tr>")
+						);
+					} else {
+
+						// Revise JSON From 
+						var newData = reviseJSON(data);
+
+						// Append Data In Table
+						$.each(newData, function (index, element) {
+							// Push Values to Array
+							specalitymode.push(newData[index].doctor_speciality);
+							pat_count_specialitymode_offline.push(newData[index].offline);
+							pat_count_specialitymode_online.push(newData[index].online);
+
+							$("#stats_specialitymode").append(
+								$("<tr>" +
+									"<td>" +
+									newData[index].doctor_speciality +
+									"</td>" +
+									"<td>" +
+									newData[index].offline +
+									"</td>" +
+									"<td>" +
+									newData[index].online +
+									"</td>" +
+									"</tr>"
+								)
+							);
+						});
+
+						// Send Data to Chart.js
+						var chartData = {
+							labels: specalitymode,
+							datasets: [
+								{
+									label: "Offline",
+									data: pat_count_specialitymode_offline,
+									backgroundColor: "#F79F1F",
+									borderWidth: 2,
+									borderColor: "#000",
+									hoverOffset: 5
+								},
+								{
+									label: "Online",
+									data: pat_count_specialitymode_online,
+									backgroundColor: "#0652DD",
+									borderWidth: 2,
+									borderColor: "#000",
+									hoverOffset: 5
+								},
+							]
+						}
+
+						var groupChart = $("#stats_specialitymode_graph");
+
+						var graph4 = new Chart(groupChart, {
+							type: 'bar',
+							data: chartData,
+							plugins: [ChartDataLabels],
+							options: {
+								indexAxis: 'y',
+								responsive: true,
+								// maintainAspectRatio: true,
+								plugins: {
+									datalabels: {
+										color: 'white',
+									}
+								},
+								scales: {
+									x: {
+										stacked: true,
+									},
+									y: {
+										stacked: true
+									}
+								}
+							}
+						});
+					}
+				}
+			});
+		}
+
+		$(document).ready(function () {
+			loadData();
+
+			$("#syncbtn").click(function (e) {
+				e.preventDefault();
+				location.reload();
+			});
+		});
+	</script>
+</body>
+
+</html>
